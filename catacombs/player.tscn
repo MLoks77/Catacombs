@@ -1,0 +1,76 @@
+[gd_scene load_steps=6 format=3 uid="uid://8cl4avn5vj5i"]
+
+[ext_resource type="Script" path="res://camera_3d.gd" id="1_kdsgh"]
+
+[sub_resource type="GDScript" id="GDScript_ia23d"]
+resource_name = "mouvementjoueur"
+script/source = "extends CharacterBody3D
+
+
+const SPEED = 8.0
+
+func _physics_process(delta: float) -> void:
+
+	# Get the input direction and handle the movement/deceleration.
+	# As good practice, you should replace UI actions with custom gameplay actions.
+	var input_dir := Input.get_vector(\"move_left\", \"move_right\", \"move_forward\", \"move_backward\")
+	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+
+	move_and_slide()
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vreoe"]
+
+[sub_resource type="GDScript" id="GDScript_gcmtg"]
+script/source = "extends CollisionShape3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_efkpg"]
+
+[node name="player" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.01868, 0)
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1.00414, 0, 0, 0, 1.00414, 0, 0, 0, 1.00414, 0, 0.4, 0)
+motion_mode = 1
+script = SubResource("GDScript_ia23d")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="CharacterBody3D"]
+transform = Transform3D(0.763923, -8.13896e-09, -6.62865e-08, 0, -0.758229, 0.0930989, 6.67843e-08, 0.0930989, 0.758229, 0, 0.0149999, 0.115)
+light_color = Color(0.840979, 0.806048, 0.682134, 1)
+light_energy = 25.0
+light_indirect_energy = 10.0
+light_volumetric_fog_energy = 2.0
+spot_range = 14.8991
+spot_attenuation = 1.5
+spot_angle = 36.6601
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, -0.00195313)
+shape = SubResource("CapsuleShape3D_vreoe")
+script = SubResource("GDScript_gcmtg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_efkpg")
+skeleton = NodePath("../..")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+fov = 76.5
+script = ExtResource("1_kdsgh")

@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgg5xbvwnwxmi"]
+
+[ext_resource type="PackedScene" uid="uid://b4ghcsdy58q6c" path="res://tiles.glb" id="1_aeu0s"]
+
+[node name="tiles" instance=ExtResource("1_aeu0s")]
+
+[node name="wall" parent="." index="0"]
+layers = 2
+
+[node name="wallcorner" parent="." index="1"]
+layers = 2
+
+[node name="soltoit" parent="." index="2"]
+layers = 2
+
+[node name="corner" parent="." index="3"]
+layers = 2
